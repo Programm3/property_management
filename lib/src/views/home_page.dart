@@ -82,6 +82,7 @@ class _HomePageState extends State<HomePage> {
   String? _selectRentType;
   final FocusNode _searchFocusNode = FocusNode();
   bool _isSearchFocused = false;
+  List<dynamic> _filteredProperties = [];
 
   // Future<void> _searchProperties(String searchTerm) async {
   //   if (searchTerm.isEmpty) return;
@@ -919,6 +920,8 @@ class _HomePageState extends State<HomePage> {
       if (mounted) {
         setState(() {
           _properties = response['results'] ?? [];
+          _filteredProperties =
+              _properties.where((property) => property['status'] == 1).toList();
           _isLoading = false;
         });
       }
@@ -1008,7 +1011,7 @@ class _HomePageState extends State<HomePage> {
                       context.push(
                         '/home_search',
                         extra: {
-                          'properties': _properties,
+                          'properties': _filteredProperties,
                           'selectedProvince': _selectedProvince,
                           'selectedPropertyType': _selectedPropertyType,
                           'selectedRentType': _selectRentType,
@@ -1092,9 +1095,9 @@ class _HomePageState extends State<HomePage> {
           ),
       child: ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: _properties.length,
+        itemCount: _filteredProperties.length,
         itemBuilder: (context, index) {
-          final property = _properties[index];
+          final property = _filteredProperties[index];
           return PropertyCard(
             property: property,
             onTap: () => context.push('/details/${property['id']}'),
