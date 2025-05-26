@@ -468,42 +468,6 @@ class _DetailsPageState extends State<DetailsPage> {
                                                 ),
                                               ),
                                             ),
-
-                                            // Dots indicator
-                                            Positioned(
-                                              bottom: 20,
-                                              left: 0,
-                                              right: 0,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children:
-                                                    images.asMap().entries.map((
-                                                      entry,
-                                                    ) {
-                                                      return Container(
-                                                        width: 8,
-                                                        height: 8,
-                                                        margin:
-                                                            const EdgeInsets.symmetric(
-                                                              horizontal: 4,
-                                                            ),
-                                                        decoration: BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color:
-                                                              currentDialogImageIndex ==
-                                                                      entry.key
-                                                                  ? Color(
-                                                                    0xFF26CB93,
-                                                                  )
-                                                                  : Colors
-                                                                      .white,
-                                                        ),
-                                                      );
-                                                    }).toList(),
-                                              ),
-                                            ),
                                           ],
                                         );
                                       },
@@ -566,31 +530,6 @@ class _DetailsPageState extends State<DetailsPage> {
                 ),
               ),
             ),
-
-            if (images.length > 1)
-              Positioned(
-                bottom: 10,
-                left: 0,
-                right: 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:
-                      images.asMap().entries.map((entry) {
-                        return Container(
-                          width: 8,
-                          height: 8,
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                                _currentImageIndex == entry.key
-                                    ? Color(0xFF26CB93)
-                                    : Colors.white,
-                          ),
-                        );
-                      }).toList(),
-                ),
-              ),
           ],
         ),
 
