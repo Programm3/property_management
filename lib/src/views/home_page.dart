@@ -1104,16 +1104,25 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: _properties.length,
-      itemBuilder: (context, index) {
-        final property = _properties[index];
-        return PropertyCard(
-          property: property,
-          onTap: () => context.push('/details/${property['id']}'),
-        );
-      },
+    return RefreshIndicator(
+      color: const Color(0xFF26CB93),
+      onRefresh:
+          () => _loadProperties(
+            provinceId: _selectedProvince,
+            rentTypeId: _selectRentType,
+            propertyTypeId: _selectedPropertyType,
+          ),
+      child: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: _properties.length,
+        itemBuilder: (context, index) {
+          final property = _properties[index];
+          return PropertyCard(
+            property: property,
+            onTap: () => context.push('/details/${property['id']}'),
+          );
+        },
+      ),
     );
   }
 }
