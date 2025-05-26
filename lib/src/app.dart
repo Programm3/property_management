@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:property_manage/src/providers/connectivity_provider.dart';
 import 'package:property_manage/src/providers/message_provider.dart';
 import 'package:property_manage/src/providers/property_provider.dart';
 import 'package:property_manage/src/providers/rental_types_provider.dart';
@@ -34,36 +35,11 @@ class _MyAppState extends State<MyApp> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     await authProvider.ensureInitialized();
 
-    // if (authProvider.isAuthenticated) {
     setState(() {
       _isInitializing = false;
     });
     return;
-    // } else {
-    //   await _loginUser();
-    // }
   }
-
-  // Future<void> _loginUser() async {
-  //   try {
-  //     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-  //     final success = await authProvider.login('soegyi', 'ss123123');
-
-  //     if (success) {
-  //       print('Login successful');
-  //     } else {
-  //       print('Login failed: ${authProvider.error}');
-  //     }
-  //   } catch (e) {
-  //     print('Error during login: $e');
-  //   } finally {
-  //     if (mounted) {
-  //       setState(() {
-  //         _isInitializing = false;
-  //       });
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +73,18 @@ class _MyAppState extends State<MyApp> {
                   previous ?? MessageProvider(apiService),
         ),
       ],
-      child: Consumer2<LanguageProvider, AuthProvider>(
-        builder: (context, languageProvider, authProvider, child) {
+      child: Consumer3<LanguageProvider, AuthProvider, ConnectivityProvider>(
+        builder: (
+          context,
+          languageProvider,
+          authProvider,
+          connectivityProvider,
+          child,
+        ) {
           if (_isInitializing) {
-            return const Center(child: CircularProgressIndicator());
+            return const MaterialApp(
+              home: Scaffold(body: Center(child: CircularProgressIndicator())),
+            );
           }
           return MaterialApp.router(
             title: 'Property Management',
@@ -118,6 +102,33 @@ class _MyAppState extends State<MyApp> {
               GlobalCupertinoLocalizations.delegate,
             ],
             routerConfig: router,
+            builder: (context, child) {
+              return Stack(
+                children: [
+                  child!,
+                  if (!connectivityProvider.isConnected)
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        color: Colors.red,
+                        padding: const EdgeInsets.only(top: 60, bottom: 20),
+                        width: double.infinity,
+                        child: const Text(
+                          'No Internet',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 32,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
           );
         },
       ),
