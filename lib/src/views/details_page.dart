@@ -1,4 +1,5 @@
 import 'dart:convert';
+// import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -634,25 +635,45 @@ class _DetailsPageState extends State<DetailsPage> {
                         Expanded(
                           child: GestureDetector(
                             onTap: () async {
-                              final googleMapsUrl =
-                                  'https://maps.google.com/?q=$location';
-                              final Uri uri = Uri.parse(googleMapsUrl);
+                              // final encodedLocation = Uri.encodeComponent(
+                              //   location,
+                              // );
+                              // final googleMapsUrl =
+                              //     'https://maps.google.com/?q=$encodedLocation';
+                              String mapUrl = location;
+
+                              // if (Platform.isIOS) {
+                              //   mapUrl =
+                              //       'comgooglemaps://?q=${Uri.encodeComponent(location)}';
+                              // }
+                              final Uri uri = Uri.parse(mapUrl);
                               if (await canLaunchUrl(uri)) {
                                 await launchUrl(
                                   uri,
                                   mode: LaunchMode.externalApplication,
                                 );
                               } else {
-                                if (mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        AppLocalizations.of(
-                                          context,
-                                        ).translate('couldNotOpenMap'),
-                                      ),
-                                    ),
+                                final fallbackUrl =
+                                    'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(location)}';
+                                final fallbackUri = Uri.parse(fallbackUrl);
+
+                                if (await canLaunchUrl(fallbackUri)) {
+                                  await launchUrl(
+                                    fallbackUri,
+                                    mode: LaunchMode.externalApplication,
                                   );
+                                } else {
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          ).translate('couldNotOpenMap'),
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 }
                               }
                             },
