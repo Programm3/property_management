@@ -23,6 +23,7 @@ class _DetailsPageState extends State<DetailsPage> {
   String? _error;
   Map<String, dynamic>? _property;
   int _currentImageIndex = 0;
+  late PageController _mainPageController;
 
   String _formatDate(String dateTimeString) {
     try {
@@ -39,7 +40,14 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   void initState() {
     super.initState();
+    _mainPageController = PageController(initialPage: 0);
     _fetchPropertyDetails();
+  }
+
+  @override
+  void dispose() {
+    _mainPageController.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchPropertyDetails() async {
@@ -330,10 +338,11 @@ class _DetailsPageState extends State<DetailsPage> {
               child:
                   images.isNotEmpty
                       ? PageView.builder(
+                        controller: _mainPageController,
                         itemCount: images.length,
-                        onPageChanged: (index) {
+                        onPageChanged: (newIndex) {
                           setState(() {
-                            _currentImageIndex = index;
+                            _currentImageIndex = newIndex;
                           });
                         },
                         itemBuilder: (context, index) {
@@ -342,52 +351,162 @@ class _DetailsPageState extends State<DetailsPage> {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
+                                  int currentDialogImageIndex = index;
                                   return Dialog(
                                     insetPadding: EdgeInsets.zero,
                                     backgroundColor: Colors.transparent,
-                                    child: Stack(
-                                      children: [
-                                        InteractiveViewer(
-                                          minScale: 0.5,
-                                          maxScale: 3.0,
-                                          child: Image.network(
-                                            images[index]['image'],
-                                            width: double.infinity,
-                                            fit: BoxFit.contain,
-                                            errorBuilder:
-                                                (ctx, error, _) => Container(
-                                                  color: Colors.black,
-                                                  child: const Center(
-                                                    child: Icon(
-                                                      Icons.broken_image,
-                                                      size: 100,
-                                                      color: Colors.white,
+                                    child: StatefulBuilder(
+                                      builder: (
+                                        BuildContext dialogContext,
+                                        StateSetter setDialogState,
+                                      ) {
+                                        return Stack(
+                                          children: [
+                                            PageView.builder(
+                                              itemCount: images.length,
+                                              controller: PageController(
+                                                initialPage: index,
+                                              ),
+                                              onPageChanged: (newIndex) {
+                                                setDialogState(() {
+                                                  currentDialogImageIndex =
+                                                      newIndex;
+                                                });
+                                                setState(() {
+                                                  _currentImageIndex = newIndex;
+                                                });
+
+                                                _mainPageController.jumpToPage(
+                                                  newIndex,
+                                                );
+                                              },
+                                              itemBuilder: (
+                                                context,
+                                                pageIndex,
+                                              ) {
+                                                return InteractiveViewer(
+                                                  minScale: 0.5,
+                                                  maxScale: 3.0,
+                                                  child: Container(
+                                                    color: Colors.black,
+                                                    child: Center(
+                                                      child: Image.network(
+                                                        images[pageIndex]['image'],
+                                                        width: double.infinity,
+                                                        fit: BoxFit.contain,
+                                                        errorBuilder:
+                                                            (
+                                                              ctx,
+                                                              error,
+                                                              _,
+                                                            ) => Container(
+                                                              color:
+                                                                  Colors.black,
+                                                              child: const Center(
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .broken_image,
+                                                                  size: 100,
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                      ),
                                                     ),
                                                   ),
+                                                );
+                                              },
+                                            ),
+
+                                            // Close button
+                                            Positioned(
+                                              top: 20,
+                                              right: 20,
+                                              child: GestureDetector(
+                                                onTap:
+                                                    () =>
+                                                        Navigator.pop(context),
+                                                child: Container(
+                                                  padding: const EdgeInsets.all(
+                                                    8,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.close,
+                                                    color: Colors.white,
+                                                    size: 24,
+                                                  ),
                                                 ),
-                                          ),
-                                        ),
-                                        // Close button
-                                        Positioned(
-                                          top: 20,
-                                          right: 20,
-                                          child: GestureDetector(
-                                            onTap: () => Navigator.pop(context),
-                                            child: Container(
-                                              padding: const EdgeInsets.all(8),
-                                              decoration: BoxDecoration(
-                                                color: Colors.black,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: const Icon(
-                                                Icons.close,
-                                                color: Colors.white,
-                                                size: 24,
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                      ],
+
+                                            Positioned(
+                                              bottom: 20,
+                                              right: 20,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 6,
+                                                    ),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black,
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                ),
+                                                child: Text(
+                                                  '${currentDialogImageIndex + 1}/${images.length}',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+                                            // Dots indicator
+                                            Positioned(
+                                              bottom: 20,
+                                              left: 0,
+                                              right: 0,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children:
+                                                    images.asMap().entries.map((
+                                                      entry,
+                                                    ) {
+                                                      return Container(
+                                                        width: 8,
+                                                        height: 8,
+                                                        margin:
+                                                            const EdgeInsets.symmetric(
+                                                              horizontal: 4,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color:
+                                                              currentDialogImageIndex ==
+                                                                      entry.key
+                                                                  ? Color(
+                                                                    0xFF26CB93,
+                                                                  )
+                                                                  : Colors
+                                                                      .white,
+                                                        ),
+                                                      );
+                                                    }).toList(),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
                                     ),
                                   );
                                 },
