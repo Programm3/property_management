@@ -182,8 +182,8 @@ class _HomeSearchPageState extends State<HomeSearchPage> {
                       () => {
                         context.pop({'showFilter': true}),
                       },
-                  child: Image.asset(
-                    'assets/images/home_filter.png',
+                  child: SvgPicture.asset(
+                    'assets/images/cross_dark.svg',
                     width: 24,
                     height: 24,
                   ),
