@@ -84,7 +84,7 @@ final router = GoRouter(
           selectedProvince: extra?['selectedProvince'] as String?,
           selectedPropertyType: extra?['selectedPropertyType'] as String?,
           selectedRentType: extra?['selectedRentType'] as String?,
-          initialQuery: extra?['initialQuery'] as String? ?? '',
+          properties: extra?['properties'] as List<dynamic>?,
         );
       },
     ),

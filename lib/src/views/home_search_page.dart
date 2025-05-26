@@ -10,14 +10,14 @@ class HomeSearchPage extends StatefulWidget {
   final String? selectedProvince;
   final String? selectedPropertyType;
   final String? selectedRentType;
-  final String initialQuery;
+  final List<dynamic>? properties;
 
   const HomeSearchPage({
     super.key,
     this.selectedProvince,
     this.selectedPropertyType,
     this.selectedRentType,
-    this.initialQuery = '',
+    this.properties,
   });
 
   @override
@@ -35,15 +35,19 @@ class _HomeSearchPageState extends State<HomeSearchPage> {
   @override
   void initState() {
     super.initState();
-    _searchController = TextEditingController(text: widget.initialQuery);
+    _searchController = TextEditingController(text: '');
     _searchFocusNode = FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _searchFocusNode.requestFocus();
-      if (widget.initialQuery.isNotEmpty) {
-        _searchProperties(widget.initialQuery);
-      }
-    });
+    if (widget.properties != null && widget.properties!.isNotEmpty) {
+      _searchResults = widget.properties!;
+    }
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   _searchFocusNode.requestFocus();
+    //   if (widget.initialQuery.isNotEmpty) {
+    //     _searchProperties(widget.initialQuery);
+    //   }
+    // });
   }
 
   @override
@@ -160,7 +164,7 @@ class _HomeSearchPageState extends State<HomeSearchPage> {
                                   _searchController.clear();
                                   _hasSearched = false;
                                   setState(() {
-                                    _searchResults = [];
+                                    _searchResults = widget.properties ?? [];
                                   });
                                 },
                               )

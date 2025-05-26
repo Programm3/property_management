@@ -74,7 +74,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  final TextEditingController _searchController = TextEditingController();
   bool _isLoading = false;
   String? _error;
   List<dynamic> _properties = [];
@@ -84,38 +83,38 @@ class _HomePageState extends State<HomePage> {
   final FocusNode _searchFocusNode = FocusNode();
   bool _isSearchFocused = false;
 
-  Future<void> _searchProperties(String searchTerm) async {
-    if (searchTerm.isEmpty) return;
-    setState(() {
-      _isLoading = true;
-      _error = null;
-      _selectedPropertyType = null;
-      _selectedProvince = null;
-      _isSearchFocused = false;
-    });
+  // Future<void> _searchProperties(String searchTerm) async {
+  //   if (searchTerm.isEmpty) return;
+  //   setState(() {
+  //     _isLoading = true;
+  //     _error = null;
+  //     _selectedPropertyType = null;
+  //     _selectedProvince = null;
+  //     _isSearchFocused = false;
+  //   });
 
-    try {
-      final apiService = Provider.of<ApiService>(context, listen: false);
-      final queryParams = {'search': searchTerm};
+  //   try {
+  //     final apiService = Provider.of<ApiService>(context, listen: false);
+  //     final queryParams = {'search': searchTerm};
 
-      final response = await apiService.get('posts', queryParams: queryParams);
+  //     final response = await apiService.get('posts', queryParams: queryParams);
 
-      if (mounted) {
-        setState(() {
-          _properties = response['results'] ?? [];
-          _isLoading = false;
-          _searchFocusNode.unfocus();
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _error = e.toString();
-          _isLoading = false;
-        });
-      }
-    }
-  }
+  //     if (mounted) {
+  //       setState(() {
+  //         _properties = response['results'] ?? [];
+  //         _isLoading = false;
+  //         _searchFocusNode.unfocus();
+  //       });
+  //     }
+  //   } catch (e) {
+  //     if (mounted) {
+  //       setState(() {
+  //         _error = e.toString();
+  //         _isLoading = false;
+  //       });
+  //     }
+  //   }
+  // }
 
   // Dropdown for province and property type
   void _showFilterPanel(context) {
@@ -889,7 +888,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     _saveFilterPreferences();
-    _searchController.dispose();
     _searchFocusNode.dispose();
     super.dispose();
   }
@@ -916,7 +914,6 @@ class _HomePageState extends State<HomePage> {
         'rent_type':
             (rentTypeId == null || rentTypeId == 'null') ? '' : rentTypeId,
       };
-      // print('$queryParams - query parameter in home');
       final response = await apiService.get('posts', queryParams: queryParams);
 
       if (mounted) {
@@ -971,12 +968,9 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: _searchController,
                     focusNode: _searchFocusNode,
                     textInputAction: TextInputAction.search,
-                    onSubmitted: (value) {
-                      _searchProperties(value);
-                    },
+
                     decoration: InputDecoration(
                       hintText: AppLocalizations.of(
                         context,
@@ -998,26 +992,10 @@ class _HomePageState extends State<HomePage> {
                           iconSize: 14,
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
-                          onPressed: () {
-                            _searchProperties(_searchController.text);
-                          },
+                          onPressed: () {},
                         ),
                       ),
-                      suffixIcon:
-                          _searchController.text.isNotEmpty
-                              ? IconButton(
-                                icon: SvgPicture.asset(
-                                  'assets/images/cross_gray.svg',
-                                  width: 14,
-                                  height: 14,
-                                ),
-                                onPressed: () {
-                                  _searchController.clear();
-                                  setState(() {});
-                                  _loadProperties();
-                                },
-                              )
-                              : null,
+                      suffixIcon: null,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(22),
                         borderSide: BorderSide.none,
@@ -1030,10 +1008,10 @@ class _HomePageState extends State<HomePage> {
                       context.push(
                         '/home_search',
                         extra: {
+                          'properties': _properties,
                           'selectedProvince': _selectedProvince,
                           'selectedPropertyType': _selectedPropertyType,
                           'selectedRentType': _selectRentType,
-                          'initialQuery': _searchController.text,
                         },
                       );
                     },
