@@ -1077,7 +1077,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    if (_properties.isEmpty) {
+    if (_filteredProperties.isEmpty) {
       return Center(
         child: Text(
           AppLocalizations.of(context).translate('noPropertiesFound'),
