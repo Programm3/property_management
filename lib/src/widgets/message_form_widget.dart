@@ -27,6 +27,8 @@ class _MessageFormWidgetState extends State<MessageFormWidget> {
   }
 
   Future<void> _sendMessage() async {
+    FocusScope.of(context).unfocus();
+
     if (_nameController.text.isEmpty ||
         _contactController.text.isEmpty ||
         _messageController.text.isEmpty) {
