@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:property_manage/src/localization/app_localizations.dart';
 
 class PrivacyPolicyPage extends StatelessWidget {
   const PrivacyPolicyPage({super.key});
@@ -9,8 +10,8 @@ class PrivacyPolicyPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
-          'Privacy Policy',
+        title: Text(
+          AppLocalizations.of(context).translate('privacyPolicy'),
           style: TextStyle(
             color: Colors.black,
             fontSize: 18,
@@ -25,9 +26,9 @@ class PrivacyPolicyPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text(
-                'Privacy Policy',
+                AppLocalizations.of(context).translate('privacyPolicy'),
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -45,8 +46,8 @@ class PrivacyPolicyPage extends StatelessWidget {
                 'We will use the collected information for other purposes. We will use the flower in a reasonable way (such as app-to-window, etc.) to inform you and before the use of your consent again.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black87,
-                  height: 1.5,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xff000000),
                 ),
               ),
             ],

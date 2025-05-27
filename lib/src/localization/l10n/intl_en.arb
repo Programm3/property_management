@@ -78,5 +78,9 @@
   "areaUnit": " RAI",
   "all": "---(ALL)",
   "rentType": "Rent Type",
-  "tryAgain": "Try Again"
+  "tryAgain": "Try Again",
+  "privacyPolicy": "Privacy Policy",
+  "agree": "Agree",
+  "refuseAndClose": "Refuse and Close",
+  "clickToView": "Click to check details"
 }

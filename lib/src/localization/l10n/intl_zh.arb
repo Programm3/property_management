@@ -78,5 +78,9 @@
   "areaUnit": " 莱",
   "all": "---(全部)",
   "rentType": "租赁类型",
-  "tryAgain": "重试"
+  "tryAgain": "重试",
+  "privacyPolicy": "隐私协议",
+  "agree": "同意并继续",
+  "refuseAndClose": "拒绝并关闭",
+  "clickToView": "点击查看"
 }

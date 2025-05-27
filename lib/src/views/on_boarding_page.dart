@@ -1,6 +1,7 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:property_manage/src/localization/app_localizations.dart';
 import 'package:property_manage/src/models/rent_type.dart';
@@ -11,6 +12,8 @@ import 'package:property_manage/src/providers/rental_types_provider.dart';
 // import 'package:property_manage/src/services/api_service.dart';
 import 'package:property_manage/src/widgets/option_card_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:property_manage/src/services/privacy_policy_service.dart';
+import 'package:property_manage/src/widgets/privacy_policy_dialog.dart';
 
 class OnBoardingPage extends StatefulWidget {
   const OnBoardingPage({super.key});
@@ -41,10 +44,37 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
+        _checkPrivacyPolicy();
         _login();
         // context.read<RentalTypesProvider>().loadRentTypes();
       }
     });
+  }
+
+  Future<void> _checkPrivacyPolicy() async {
+    final hasAccepted = await PrivacyPolicyService.hasAcceptedPrivacyPolicy();
+    if (!hasAccepted && mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return PrivacyPolicyDialog(
+            onAccept: () {
+              PrivacyPolicyService.setPrivacyPolicyAccepted();
+              Navigator.of(context).pop();
+            },
+            onDecline: () {
+              Navigator.of(context).pop();
+              if (Platform.isAndroid) {
+                SystemNavigator.pop();
+              } else if (Platform.isIOS) {
+                exit(0);
+              }
+            },
+          );
+        },
+      );
+    }
   }
 
   Future<void> _login() async {
