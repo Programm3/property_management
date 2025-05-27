@@ -6,6 +6,11 @@ import 'package:property_manage/src/localization/app_localizations.dart';
 import 'package:property_manage/src/providers/language_provider.dart';
 import 'package:provider/provider.dart';
 
+String _cleanupContentText(String text) {
+  String cleaned = text.replaceAll(RegExp(r'\r\n\r\n'), '\r\n');
+  return cleaned;
+}
+
 class PropertyCard extends StatelessWidget {
   final dynamic property;
   final VoidCallback onTap;
@@ -163,9 +168,11 @@ class PropertyCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        utf8.decode(
-                          property[contentText[currentLanguageCode]].runes
-                              .toList(),
+                        _cleanupContentText(
+                          utf8.decode(
+                            property[contentText[currentLanguageCode]].runes
+                                .toList(),
+                          ),
                         ),
                         style: const TextStyle(
                           fontSize: 14,
