@@ -39,7 +39,10 @@ class PrivacyPolicyDialog extends StatelessWidget {
               height: 36,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
-                border: Border.all(color: const Color(0xFF26CB93), width: 1),
+                border: Border.all(
+                  color: const Color.fromARGB(255, 179, 175, 175),
+                  width: 1,
+                ),
               ),
               child: Center(
                 child: Text(

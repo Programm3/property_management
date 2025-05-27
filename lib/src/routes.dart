@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:property_manage/src/providers/auth_provider.dart';
+import 'package:property_manage/src/services/privacy_policy_service.dart';
 import 'package:property_manage/src/views/cooperation_page.dart';
 import 'package:property_manage/src/views/details_page.dart';
 import 'package:property_manage/src/views/home_search_page.dart';
@@ -24,17 +25,19 @@ final GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>(
 final router = GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: '/home',
-  redirect: (BuildContext context, GoRouterState state) {
+  redirect: (BuildContext context, GoRouterState state) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final bool isAuthenticated = authProvider.isAuthenticated;
+    final bool hasAcceptedPrivacyPolicy =
+        await PrivacyPolicyService.hasAcceptedPrivacyPolicy();
 
-    final publicRoutes = ['/onboarding', '/onboarding2'];
+    final publicRoutes = ['/onboarding', '/onboarding2', '/privacy-policy'];
 
     if (publicRoutes.any((route) => state.matchedLocation.startsWith(route))) {
       return null;
     }
 
-    if (!isAuthenticated) {
+    if (!hasAcceptedPrivacyPolicy || !isAuthenticated) {
       return '/onboarding';
     }
 
