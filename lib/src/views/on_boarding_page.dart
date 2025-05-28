@@ -83,8 +83,17 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     setState(() {
       _isLoggingIn = true;
     });
+
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+      if (authProvider.isAuthenticated) {
+        context.read<RentalTypesProvider>().loadRentTypes();
+
+        if (!mounted) return;
+        return;
+      }
+
       final success = await authProvider.login('soegyi', 'ss123123');
 
       if (success) {
@@ -92,13 +101,13 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
         // _loadRentTypes();
         context.read<RentalTypesProvider>().loadRentTypes();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context).translate('loginSuccess'),
-            ),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text(
+        //       AppLocalizations.of(context).translate('loginSuccess'),
+        //     ),
+        //   ),
+        // );
       } else {
         if (!mounted) return;
 
