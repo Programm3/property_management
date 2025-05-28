@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:property_manage/src/localization/app_localizations.dart';
 
 class PrivacyPolicyPage extends StatelessWidget {
@@ -11,10 +10,6 @@ class PrivacyPolicyPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, size: 20),
-          onPressed: () => context.goNamed('onboarding'),
-        ),
         title: Text(
           AppLocalizations.of(context).translate('privacyPolicy'),
           style: const TextStyle(
@@ -32,14 +27,6 @@ class PrivacyPolicyPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Text(
-              //   AppLocalizations.of(context).translate('privacyPolicy'),
-              //   style: TextStyle(
-              //     fontSize: 18,
-              //     fontWeight: FontWeight.bold,
-              //     color: Colors.black,
-              //   ),
-              // ),
               SizedBox(height: 16),
               Text(
                 'We know how important personal information is to you and thank you for the trust you place in us. Through this policy, we will explain to you the purpose, method, and scope of the collection, storage, sharing, protection, and use of your personal information, information security protection measures, as well as the methods we provide you with to access, update, delete, and other control of your personal information, and explain your rights, which are as follows:\n\n'

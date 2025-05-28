@@ -59,9 +59,7 @@ class _OnBoarding2PageState extends State<OnBoarding2Page> {
         }
 
         final provinces =
-            provinceProvider.provinces
-                .where((p) => p.id != null)
-                .toList(); // hide id == null
+            provinceProvider.provinces.where((p) => p.id != null).toList();
         return Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(

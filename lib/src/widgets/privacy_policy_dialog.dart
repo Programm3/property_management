@@ -32,7 +32,7 @@ class PrivacyPolicyDialog extends StatelessWidget {
           const SizedBox(height: 40),
           InkWell(
             onTap: () {
-              context.goNamed('privacyPolicy');
+              context.push('/privacy-policy');
             },
             child: Container(
               width: 170,
