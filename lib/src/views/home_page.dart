@@ -810,14 +810,61 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  bool _isValidDropdownValue(
+    String? value,
+    List<dynamic> items,
+    String idField,
+  ) {
+    if (value == null) return true;
+
+    final matches = items.where((item) => item.id.toString() == value);
+    return matches.length == 1;
+  }
+
   Future<void> _loadFilterPreferences() async {
     final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    final provinceProvider = Provider.of<ProvinceProvider>(
+      context,
+      listen: false,
+    );
+    await provinceProvider.loadProvinces();
+    final provinces = provinceProvider.provinces;
+    if (!mounted) return;
+    final propertyProvider = Provider.of<PropertyProvider>(
+      context,
+      listen: false,
+    );
+    await propertyProvider.loadPropertyTypes();
+    final propertyTypes = propertyProvider.propertyTypes;
+    if (!mounted) return;
+    final rentTypeProvider = Provider.of<RentalTypesProvider>(
+      context,
+      listen: false,
+    );
+    await rentTypeProvider.loadRentTypes();
+    final rentTypes = rentTypeProvider.rentTypes;
+
+    final storedProvince =
+        prefs.getString('selected_province') ?? widget.provinceId;
+    final storedPropertyType = prefs.getString('selected_property_type');
+    final storedRentType =
+        prefs.getString('selected_rent_type') ?? widget.rentTypeId;
     setState(() {
       _selectedProvince =
-          prefs.getString('selected_province') ?? widget.provinceId;
-      _selectedPropertyType = prefs.getString('selected_property_type');
+          _isValidDropdownValue(storedProvince, provinces, 'id')
+              ? storedProvince
+              : null;
+
+      _selectedPropertyType =
+          _isValidDropdownValue(storedPropertyType, propertyTypes, 'id')
+              ? storedPropertyType
+              : null;
+
       _selectRentType =
-          prefs.getString('selected_rent_type') ?? widget.rentTypeId;
+          _isValidDropdownValue(storedRentType, rentTypes, 'id')
+              ? storedRentType
+              : null;
     });
 
     // Load properties with cached filters
