@@ -2,6 +2,8 @@ import 'dart:convert';
 // import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:property_manage/src/localization/app_localizations.dart';
 import 'package:property_manage/src/providers/language_provider.dart';
@@ -160,10 +162,13 @@ class _DetailsPageState extends State<DetailsPage> {
                     ContactOption(
                       icon: 'assets/images/line_img.png',
                       title: 'Line ID',
-                      subtitle: '12331698642',
+                      subtitle:
+                          dotenv.env['LINE_ID'] ??
+                          'https://line.me/ti/p/12331698642',
                       onTap: () {
-                        final lineUserId = '12331698642';
-                        final lineUrl = 'https://line.me/ti/p/~$lineUserId';
+                        final lineUrl =
+                            dotenv.env['LINE_ID'] ??
+                            'https://line.me/ti/p/12331698642';
                         launchUrl(
                           Uri.parse(lineUrl),
                           mode: LaunchMode.externalApplication,
@@ -188,7 +193,98 @@ class _DetailsPageState extends State<DetailsPage> {
                     ContactOption(
                       icon: 'assets/images/wechat_img.png',
                       title: 'WECHAT',
-                      subtitle: '12331698642',
+                      subtitle: dotenv.env['WECHAT_ID'] ?? '12331',
+                      onTap: () async {
+                        final wechatId = dotenv.env['WECHAT_ID'] ?? '12331';
+                        await Clipboard.setData(ClipboardData(text: wechatId));
+                        if (!context.mounted) return;
+                        Navigator.of(context).pop();
+
+                        try {
+                          bool launched = false;
+
+                          String wechatUrl;
+                          if (Theme.of(context).platform ==
+                              TargetPlatform.iOS) {
+                            wechatUrl = 'weixin://';
+                          } else {
+                            wechatUrl = 'weixin://';
+                          }
+
+                          if (await canLaunchUrl(Uri.parse(wechatUrl))) {
+                            await launchUrl(
+                              Uri.parse(wechatUrl),
+                              mode: LaunchMode.externalApplication,
+                            );
+                            launched = true;
+                          }
+
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.check_circle,
+                                    color: Colors.white,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      launched
+                                          ? AppLocalizations.of(
+                                            context,
+                                          ).translate('pleaseSearchInWeChat')
+                                          : AppLocalizations.of(
+                                            context,
+                                          ).translate('copyClipboard'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              backgroundColor: const Color(0xFF26CB93),
+                              duration: const Duration(seconds: 3),
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              margin: const EdgeInsets.all(16),
+                            ),
+                          );
+                        } catch (e) {
+                          print('WeChat launch error: $e');
+
+                          if (!context.mounted) return;
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.check_circle,
+                                    color: Colors.white,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      ).translate('copyClipboard'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              backgroundColor: const Color(0xFF26CB93),
+                              duration: const Duration(seconds: 2),
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              margin: const EdgeInsets.all(16),
+                            ),
+                          );
+                        }
+                      },
                     ),
                     const SizedBox(height: 16),
                     ContactOption(

@@ -259,10 +259,14 @@ class ContactPage extends StatelessWidget {
                   ContactInfoRow(
                     img: 'assets/images/line_img.png',
                     label: AppLocalizations.of(context).translate('line'),
-                    value: '12331698642',
+                    value:
+                        dotenv.env['LINE_ID'] ??
+                        'https://line.me/ti/p/12331698642',
                     onTap: () async {
-                      final lineUserId = '12331698642';
-                      final lineUrl = 'https://line.me/ti/p/~$lineUserId';
+                      // final lineUserId = '12331698642';
+                      final lineUrl =
+                          dotenv.env['LINE_ID'] ??
+                          'https://line.me/ti/p/12331698642';
 
                       if (await canLaunchUrl(Uri.parse(lineUrl))) {
                         await launchUrl(
@@ -270,7 +274,7 @@ class ContactPage extends StatelessWidget {
                           mode: LaunchMode.externalApplication,
                         );
                       } else {
-                        Clipboard.setData(ClipboardData(text: lineUserId));
+                        Clipboard.setData(ClipboardData(text: lineUrl));
                         if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -341,9 +345,9 @@ class ContactPage extends StatelessWidget {
                   ContactInfoRow(
                     img: 'assets/images/wechat_img.png',
                     label: AppLocalizations.of(context).translate('wechat'),
-                    value: '12331698642',
+                    value: dotenv.env['WECHAT_ID'] ?? '12331',
                     onTap: () async {
-                      final wechatId = '12331698642';
+                      final wechatId = dotenv.env['WECHAT_ID'] ?? '12331';
                       final wechatUrlAndroid = 'weixin://dl/chat?';
                       final wechatUrlIOS = 'wechat://';
                       final wechatUrl =
