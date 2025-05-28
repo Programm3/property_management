@@ -47,6 +47,14 @@ dependencies:
   fluttertoast: ^8.2.12
   url_launcher: ^6.3.1
   connectivity_plus: ^6.1.4
+  flutter_launcher_icons: ^0.14.3
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/app_icon.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
 
 dev_dependencies:
   flutter_test:
