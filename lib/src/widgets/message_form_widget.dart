@@ -119,81 +119,90 @@ class _MessageFormWidgetState extends State<MessageFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          AppLocalizations.of(context).translate('leaveMessage'),
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            AppLocalizations.of(context).translate('leaveMessage'),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
           ),
-        ),
-        const SizedBox(height: 16),
-        CustomTextField(
-          controller: _nameController,
-          label: AppLocalizations.of(context).translate('yourName'),
-          hintText: AppLocalizations.of(context).translate('fillYourName'),
-        ),
-        const SizedBox(height: 8),
-        CustomTextField(
-          controller: _contactController,
-          label: AppLocalizations.of(context).translate('phoneOrEmail'),
-          hintText: AppLocalizations.of(context).translate('fillPhoneOrEmail'),
-        ),
-        const SizedBox(height: 8),
-        CustomTextField(
-          controller: _messageController,
-          label: AppLocalizations.of(context).translate('yourRequirement'),
-          hintText: AppLocalizations.of(context).translate('fillRequirements'),
-          maxLines: 4,
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 16, 0, 30),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 8.0),
-            height: 1,
-            color: const Color(0xFFF1F1F1),
+          const SizedBox(height: 16),
+          CustomTextField(
+            controller: _nameController,
+            label: AppLocalizations.of(context).translate('yourName'),
+            hintText: AppLocalizations.of(context).translate('fillYourName'),
           ),
-        ),
-        Center(
-          child: SizedBox(
-            width: 160,
-            height: 40,
-            child:
-                _isSubmitting
-                    ? const Center(
-                      child: SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          color: Color(0xFF26CB93),
-                          strokeWidth: 2,
+          const SizedBox(height: 8),
+          CustomTextField(
+            controller: _contactController,
+            label: AppLocalizations.of(context).translate('phoneOrEmail'),
+            hintText: AppLocalizations.of(
+              context,
+            ).translate('fillPhoneOrEmail'),
+          ),
+          const SizedBox(height: 8),
+          CustomTextField(
+            controller: _messageController,
+            label: AppLocalizations.of(context).translate('yourRequirement'),
+            hintText: AppLocalizations.of(
+              context,
+            ).translate('fillRequirements'),
+            maxLines: 4,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 16, 0, 30),
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              height: 1,
+              color: const Color(0xFFF1F1F1),
+            ),
+          ),
+          Center(
+            child: SizedBox(
+              width: 160,
+              height: 40,
+              child:
+                  _isSubmitting
+                      ? const Center(
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: Color(0xFF26CB93),
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      )
+                      : ElevatedButton(
+                        onPressed: _sendMessage,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF26CB93),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          padding: EdgeInsets.zero,
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context).translate('send'),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    )
-                    : ElevatedButton(
-                      onPressed: _sendMessage,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF26CB93),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        padding: EdgeInsets.zero,
-                      ),
-                      child: Text(
-                        AppLocalizations.of(context).translate('send'),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -215,44 +224,38 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (maxLines > 1) {
-      return GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        behavior: HitTestBehavior.translucent,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: controller,
+            maxLines: maxLines,
+            keyboardType: TextInputType.multiline,
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: const TextStyle(color: Colors.grey),
+              filled: true,
+              fillColor: Colors.transparent,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 12,
+                horizontal: 16,
               ),
             ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: controller,
-              maxLines: maxLines,
-              keyboardType: TextInputType.multiline,
-              decoration: InputDecoration(
-                hintText: hintText,
-                hintStyle: const TextStyle(color: Colors.grey),
-                filled: true,
-                fillColor: Colors.transparent,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 16,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       );
     } else {
       return Row(
