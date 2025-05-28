@@ -9,24 +9,20 @@ class AppLocalizations {
 
   AppLocalizations(this.locale);
 
-  // Helper method to keep the code in the widgets concise
   static AppLocalizations of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  // Static member to provide delegate for the app
   static const LocalizationsDelegate<AppLocalizations> delegate =
       _AppLocalizationsDelegate();
 
   Future<bool> load() async {
-    // Load the language JSON file from the assets folder
     final jsonString = await rootBundle.loadString(
       'lib/src/localization/l10n/intl_${locale.languageCode}.arb',
     );
     final Map<String, dynamic> jsonMap = json.decode(jsonString);
 
     _localizedStrings = jsonMap.map((key, value) {
-      // Ignore locale metadata keys
       if (key.startsWith("@@")) return MapEntry(key, value);
       return MapEntry(key, value.toString());
     });

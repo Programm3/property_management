@@ -32,7 +32,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         return utf8.decode(rentType.nameChinese!.runes.toList());
       case 'th':
         return utf8.decode(rentType.nameThailand!.runes.toList());
-      case 'lrr':
+      case 'my':
         return utf8.decode(rentType.nameMyanmar!.runes.toList());
       default:
         return rentType.name;

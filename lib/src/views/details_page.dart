@@ -85,7 +85,7 @@ class _DetailsPageState extends State<DetailsPage> {
       'zh': 'title_chinese',
       'en': 'title',
       'th': 'title_thailand',
-      'lrr': 'title_myanmar',
+      'my': 'title_myanmar',
     };
 
     final currentLanguageCode = languageProvider.currentLocale.languageCode;
@@ -257,28 +257,28 @@ class _DetailsPageState extends State<DetailsPage> {
       'zh': 'title_chinese',
       'en': 'title',
       'th': 'title_thailand',
-      'lrr': 'title_myanmar',
+      'my': 'title_myanmar',
     };
 
     final Map<String, String> contentName = {
       'zh': 'content_chinese',
       'en': 'content',
       'th': 'content_thailand',
-      'lrr': 'content_myanmar',
+      'my': 'content_myanmar',
     };
 
     final Map<String, String> nameValue = {
       'zh': 'name_chinese',
       'en': 'name',
       'th': 'name_thailand',
-      'lrr': 'name_myanmar',
+      'my': 'name_myanmar',
     };
 
     final Map<String, String> colorText = {
       'zh': 'name_chinese',
       'en': 'name',
       'th': 'name_thailand',
-      'lrr': 'name_myanmar',
+      'my': 'name_myanmar',
     };
 
     final currentLanguageCode = languageProvider.currentLocale.languageCode;

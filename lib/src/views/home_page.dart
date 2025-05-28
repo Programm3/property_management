@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
         return utf8.decode(province.nameChinese!.runes.toList());
       case 'th':
         return utf8.decode(province.nameThailand!.runes.toList());
-      case 'lrr':
+      case 'my':
         return utf8.decode(province.nameMyanmar!.runes.toList());
       default:
         return province.name;
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
         return utf8.decode(property.nameChinese!.runes.toList());
       case 'th':
         return utf8.decode(property.nameThailand!.runes.toList());
-      case 'lrr':
+      case 'my':
         return utf8.decode(property.nameMyanmar!.runes.toList());
       default:
         return property.name;
@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
         return utf8.decode(rentType.nameChinese!.runes.toList());
       case 'th':
         return utf8.decode(rentType.nameThailand!.runes.toList());
-      case 'lrr':
+      case 'my':
         return utf8.decode(rentType.nameMyanmar!.runes.toList());
       default:
         return rentType.name;

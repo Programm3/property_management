@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui' as ui;
 
 class LanguageProvider extends ChangeNotifier {
-  Locale _currentLocale = const Locale('zh', 'CN');
-
+  late Locale _currentLocale;
   Locale get currentLocale => _currentLocale;
 
   final Map<String, Locale> supportedLanguages = {
     '中文': const Locale('zh', 'CN'),
     'English': const Locale('en', 'US'),
     'ไทย': const Locale('th', 'TH'),
-    'မြန်မာ': const Locale('yma', 'MM'),
+    'မြန်မာ': const Locale('my', 'MM'),
   };
 
+  String _getLanguageNameFromLocale(Locale locale) {
+    for (final entry in supportedLanguages.entries) {
+      if (entry.value.languageCode == locale.languageCode) {
+        return entry.key;
+      }
+    }
+    return '中文';
+  }
+
   LanguageProvider() {
+    _currentLocale = const Locale('zh', 'CN');
     loadSavedLanguage();
   }
 
@@ -24,8 +34,33 @@ class LanguageProvider extends ChangeNotifier {
 
     if (savedLanguage != null) {
       _currentLocale = Locale(savedLanguage, savedCountry);
-      notifyListeners();
+    } else {
+      final deviceLocale = ui.PlatformDispatcher.instance.locale;
+      print('Device locale: $deviceLocale');
+      final deviceLanguageCode = deviceLocale.languageCode;
+      print('Device language code: $deviceLanguageCode');
+      bool languageSupported = false;
+      for (final locale in supportedLanguages.values) {
+        if (locale.languageCode == deviceLanguageCode) {
+          _currentLocale = locale;
+          languageSupported = true;
+
+          await prefs.setString('languageCode', _currentLocale.languageCode);
+          await prefs.setString(
+            'countryCode',
+            _currentLocale.countryCode ?? '',
+          );
+          break;
+        }
+      }
+
+      if (!languageSupported) {
+        _currentLocale = const Locale('zh', 'CN');
+        await prefs.setString('languageCode', 'zh');
+        await prefs.setString('countryCode', 'CN');
+      }
     }
+    notifyListeners();
   }
 
   Future<void> changeLanguage(String languageName) async {
@@ -34,7 +69,6 @@ class LanguageProvider extends ChangeNotifier {
     _currentLocale = supportedLanguages[languageName]!;
     notifyListeners();
 
-    // Save the preference
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('languageCode', _currentLocale.languageCode);
     await prefs.setString('countryCode', _currentLocale.countryCode ?? '');
@@ -42,11 +76,24 @@ class LanguageProvider extends ChangeNotifier {
 
   //  current language name
   String getCurrentLanguageName() {
+    return _getLanguageNameFromLocale(_currentLocale);
+  }
+
+  Future<void> useSystemLanguage() async {
+    final deviceLocale = ui.PlatformDispatcher.instance.locale;
+    final deviceLanguageCode = deviceLocale.languageCode;
+
+    bool found = false;
     for (final entry in supportedLanguages.entries) {
-      if (entry.value.languageCode == _currentLocale.languageCode) {
-        return entry.key;
+      if (entry.value.languageCode == deviceLanguageCode) {
+        await changeLanguage(entry.key);
+        found = true;
+        break;
       }
     }
-    return '中文';
+
+    if (!found) {
+      await changeLanguage('中文');
+    }
   }
 }

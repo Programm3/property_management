@@ -41,7 +41,7 @@ class _OnBoarding2PageState extends State<OnBoarding2Page> {
           return utf8.decode(province.nameChinese!.runes.toList());
         case 'th':
           return utf8.decode(province.nameThailand!.runes.toList());
-        case 'lrr':
+        case 'my':
           return utf8.decode(province.nameMyanmar!.runes.toList());
         default:
           return province.name;

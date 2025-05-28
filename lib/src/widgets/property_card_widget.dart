@@ -23,21 +23,21 @@ class PropertyCard extends StatelessWidget {
       'zh': 'content_chinese',
       'en': 'content',
       'th': 'content_thailand',
-      'lrr': 'content_myanmar',
+      'my': 'content_myanmar',
     };
 
     final Map<String, String> titleText = {
       'zh': 'title_chinese',
       'en': 'title',
       'th': 'title_thailand',
-      'lrr': 'title_myanmar',
+      'my': 'title_myanmar',
     };
 
     final Map<String, String> colorText = {
       'zh': 'name_chinese',
       'en': 'name',
       'th': 'name_thailand',
-      'lrr': 'name_myanmar',
+      'my': 'name_myanmar',
     };
 
     final languageProvider = Provider.of<LanguageProvider>(context);
