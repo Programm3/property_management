@@ -83,39 +83,9 @@ class _HomePageState extends State<HomePage> {
   final FocusNode _searchFocusNode = FocusNode();
   bool _isSearchFocused = false;
   List<dynamic> _filteredProperties = [];
-
-  // Future<void> _searchProperties(String searchTerm) async {
-  //   if (searchTerm.isEmpty) return;
-  //   setState(() {
-  //     _isLoading = true;
-  //     _error = null;
-  //     _selectedPropertyType = null;
-  //     _selectedProvince = null;
-  //     _isSearchFocused = false;
-  //   });
-
-  //   try {
-  //     final apiService = Provider.of<ApiService>(context, listen: false);
-  //     final queryParams = {'search': searchTerm};
-
-  //     final response = await apiService.get('posts', queryParams: queryParams);
-
-  //     if (mounted) {
-  //       setState(() {
-  //         _properties = response['results'] ?? [];
-  //         _isLoading = false;
-  //         _searchFocusNode.unfocus();
-  //       });
-  //     }
-  //   } catch (e) {
-  //     if (mounted) {
-  //       setState(() {
-  //         _error = e.toString();
-  //         _isLoading = false;
-  //       });
-  //     }
-  //   }
-  // }
+  bool _isLoadingMore = false;
+  String? _nextPageUrl;
+  final ScrollController _scrollController = ScrollController();
 
   // Dropdown for province and property type
   void _showFilterPanel(context) {
@@ -878,6 +848,8 @@ class _HomePageState extends State<HomePage> {
       });
     });
 
+    _scrollController.addListener(_scrollListener);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         context.read<ProvinceProvider>().loadProvinces();
@@ -886,11 +858,55 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 200 &&
+        !_isLoading &&
+        !_isLoadingMore &&
+        _nextPageUrl != null) {
+      _loadMoreProperties();
+    }
+  }
+
   @override
   void dispose() {
     _saveFilterPreferences();
     _searchFocusNode.dispose();
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadMoreProperties() async {
+    if (_isLoadingMore || _nextPageUrl == null) return;
+
+    setState(() {
+      _isLoadingMore = true;
+    });
+
+    try {
+      final apiService = Provider.of<ApiService>(context, listen: false);
+
+      final response = await apiService.getWithFullUrl(_nextPageUrl!);
+
+      if (mounted) {
+        setState(() {
+          final newProperties = response['results'] ?? [];
+          _properties.addAll(newProperties);
+          _filteredProperties =
+              _properties.where((property) => property['status'] == 1).toList();
+          _nextPageUrl = response['next'];
+          _isLoadingMore = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = e.toString();
+          _isLoadingMore = false;
+        });
+      }
+    }
   }
 
   Future<void> _loadProperties({
@@ -901,6 +917,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _isLoading = true;
       _error = null;
+      _nextPageUrl = null;
     });
 
     try {
@@ -922,6 +939,7 @@ class _HomePageState extends State<HomePage> {
           _properties = response['results'] ?? [];
           _filteredProperties =
               _properties.where((property) => property['status'] == 1).toList();
+          _nextPageUrl = response['next'];
           _isLoading = false;
         });
       }
@@ -1094,9 +1112,19 @@ class _HomePageState extends State<HomePage> {
             propertyTypeId: _selectedPropertyType,
           ),
       child: ListView.builder(
+        controller: _scrollController,
         padding: const EdgeInsets.all(16),
-        itemCount: _filteredProperties.length,
+        itemCount: _filteredProperties.length + (_isLoadingMore ? 1 : 0),
         itemBuilder: (context, index) {
+          if (index == _filteredProperties.length) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: CircularProgressIndicator(color: Color(0xFF26CB93)),
+              ),
+            );
+          }
+
           final property = _filteredProperties[index];
           return PropertyCard(
             property: property,
