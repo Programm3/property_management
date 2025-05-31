@@ -57,10 +57,7 @@ class ContactPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    companyName +
-                        AppLocalizations.of(
-                          context,
-                        ).translate('companyIntroduce'),
+                    companyName,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
