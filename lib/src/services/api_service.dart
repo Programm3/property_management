@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:property_manage/src/providers/auth_provider.dart';
@@ -10,10 +12,24 @@ class ApiService {
       dotenv.env['API_BASE_URL'] ?? 'http://admin.hyfb6.com/api';
   final SessionService _sessionService = SessionService();
 
+  BuildContext? _context;
+
+  void setContext(BuildContext context) {
+    _context = context;
+  }
+
   ApiService(this.authProvider);
+
+  Future<void> _handleAuthenticationError() async {
+    if (_context != null && _context!.mounted) {
+      GoRouter.of(_context!).go('/onboarding');
+    }
+  }
+
   Future<dynamic> post(String endpoint, Map<String, dynamic> body) async {
     if (!authProvider.isAuthenticated) {
-      throw Exception('Not authenticated');
+      _handleAuthenticationError();
+      return {};
     }
 
     try {
@@ -36,7 +52,8 @@ class ApiService {
         }
       } else if (response.statusCode == 401) {
         await _sessionService.handleSessionExpiry(authProvider);
-        throw Exception('Session expired');
+        _handleAuthenticationError();
+        return {};
       } else {
         try {
           final errorResponse = jsonDecode(response.body);
@@ -44,13 +61,13 @@ class ApiService {
               errorResponse['message'] ??
               errorResponse['error'] ??
               'Unknown error';
-          throw Exception('API Error: $errorMessage');
+          return {'error': errorMessage};
         } catch (e) {
-          throw Exception('API Error: ${response.statusCode}');
+          return {'error': 'API Error: ${response.statusCode}'};
         }
       }
     } catch (e) {
-      throw Exception('Network error: $e');
+      return {'error': 'Network error'};
     }
   }
 
@@ -59,7 +76,8 @@ class ApiService {
     Map<String, String?>? queryParams,
   }) async {
     if (!authProvider.isAuthenticated) {
-      throw Exception('Not authenticated');
+      _handleAuthenticationError();
+      return {'results': []};
     }
 
     try {
@@ -79,21 +97,25 @@ class ApiService {
         return jsonDecode(response.body);
       } else if (response.statusCode == 401) {
         await _sessionService.handleSessionExpiry(authProvider);
-        throw Exception('Session expired');
+        _handleAuthenticationError();
+        return {'results': []};
       } else {
-        throw Exception('API Error: ${response.statusCode}');
+        return {'results': []};
       }
     } catch (e) {
-      throw Exception('Network error: $e');
+      return {'results': []};
     }
   }
 
   Future<List<dynamic>> getPosts() async {
     try {
       final data = await get('posts');
-      return data as List<dynamic>;
+      if (data is Map<String, dynamic> && data.containsKey('results')) {
+        return data['results'] as List<dynamic>;
+      }
+      return [];
     } catch (e) {
-      rethrow;
+      return [];
     }
   }
 
@@ -110,12 +132,13 @@ class ApiService {
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401) {
-        throw Exception('Unauthorized');
+        _handleAuthenticationError();
+        return {'results': []};
       } else {
-        throw Exception('Failed to load data: ${response.statusCode}');
+        return {'results': []};
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      return {'results': []};
     }
   }
 }

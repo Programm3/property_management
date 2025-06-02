@@ -32,18 +32,38 @@ class ProvinceProvider with ChangeNotifier {
     try {
       final response = await _apiService.get('province');
 
-      final apiProvinces =
-          (response as List).map((item) => Province.fromJson(item)).toList();
-
-      _provinces = [_provinces[0], ...apiProvinces];
-
+      if (response is List) {
+        final apiProvinces =
+            response.map((item) => Province.fromJson(item)).toList();
+        _provinces = [_provinces[0], ...apiProvinces];
+      } else if (response is Map) {
+        if (response.containsKey('results')) {
+          final results = response['results'];
+          if (results is List) {
+            final apiProvinces =
+                results.map((item) => Province.fromJson(item)).toList();
+            _provinces = [_provinces[0], ...apiProvinces];
+          }
+        } else {
+          for (var key in response.keys) {
+            if (response[key] is List) {
+              final apiProvinces =
+                  (response[key] as List)
+                      .map((item) => Province.fromJson(item))
+                      .toList();
+              _provinces = [_provinces[0], ...apiProvinces];
+              break;
+            }
+          }
+        }
+      }
       _isLoading = false;
       notifyListeners();
     } catch (e) {
       _error = e.toString();
       _isLoading = false;
       notifyListeners();
-      print('Failed to load provinces: $_error');
+      // print('Failed to load provinces: $_error');
     }
   }
 }

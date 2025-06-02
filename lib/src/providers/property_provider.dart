@@ -32,11 +32,31 @@ class PropertyProvider with ChangeNotifier {
     try {
       final response = await _apiService.get('property-type');
 
-      final apipropertyTypes =
-          (response as List)
-              .map((item) => PropertyType.fromJson(item))
-              .toList();
-      _propertyTypes = [_propertyTypes[0], ...apipropertyTypes];
+      if (response is List) {
+        final apiPropertyTypes =
+            response.map((item) => PropertyType.fromJson(item)).toList();
+        _propertyTypes = [_propertyTypes[0], ...apiPropertyTypes];
+      } else if (response is Map) {
+        if (response.containsKey('results')) {
+          final results = response['results'];
+          if (results is List) {
+            final apiPropertyTypes =
+                results.map((item) => PropertyType.fromJson(item)).toList();
+            _propertyTypes = [_propertyTypes[0], ...apiPropertyTypes];
+          }
+        } else {
+          for (var key in response.keys) {
+            if (response[key] is List) {
+              final apiPropertyTypes =
+                  (response[key] as List)
+                      .map((item) => PropertyType.fromJson(item))
+                      .toList();
+              _propertyTypes = [_propertyTypes[0], ...apiPropertyTypes];
+              break;
+            }
+          }
+        }
+      }
 
       _isLoading = false;
       notifyListeners();
@@ -44,7 +64,7 @@ class PropertyProvider with ChangeNotifier {
       _error = e.toString();
       _isLoading = false;
       notifyListeners();
-      print('Failed to load property types: $_error');
+      // print('Failed to load property types: $_error');
     }
   }
 

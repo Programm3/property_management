@@ -24,8 +24,27 @@ class RentalTypesProvider with ChangeNotifier {
     try {
       final response = await _apiService.get('rent-type');
 
-      _rentTypes =
-          (response as List).map((item) => RentType.fromJson(item)).toList();
+      if (response is List) {
+        _rentTypes = response.map((item) => RentType.fromJson(item)).toList();
+      } else if (response is Map) {
+        if (response.containsKey('results')) {
+          final results = response['results'];
+          if (results is List) {
+            _rentTypes =
+                results.map((item) => RentType.fromJson(item)).toList();
+          }
+        } else {
+          for (var key in response.keys) {
+            if (response[key] is List) {
+              _rentTypes =
+                  (response[key] as List)
+                      .map((item) => RentType.fromJson(item))
+                      .toList();
+              break;
+            }
+          }
+        }
+      }
 
       _isLoading = false;
       notifyListeners();
@@ -33,7 +52,7 @@ class RentalTypesProvider with ChangeNotifier {
       _error = e.toString();
       _isLoading = false;
       notifyListeners();
-      print('Failed to load rent types: $_error');
+      // print('Failed to load rent types: $_error');
     }
   }
 
