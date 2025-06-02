@@ -62,8 +62,8 @@ class AuthProvider extends ChangeNotifier {
       var headers = {'Content-Type': 'application/json'};
       var request = http.Request('POST', Uri.parse('$_apiBaseUrl/token/'));
       request.body = json.encode({
-        "username": "soegyi",
-        "password": "ss123123",
+        "username": dotenv.env['USERNAME'],
+        "password": dotenv.env['PASSWORD'],
       });
       request.headers.addAll(headers);
 
