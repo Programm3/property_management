@@ -134,7 +134,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 ),
                 padding: const EdgeInsets.all(24),
-                height: MediaQuery.of(context).size.height * 0.45,
+                height: MediaQuery.of(context).size.height * 0.3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -175,20 +175,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         );
                       },
                     ),
-                    const SizedBox(height: 16),
-                    ContactOption(
-                      icon: 'assets/images/whatapp_img.png',
-                      title: 'WHATS APP',
-                      subtitle: '12331698642',
-                      onTap: () {
-                        final phoneNumber = '12331698642';
-                        final whatsappUrl = 'https://wa.me/$phoneNumber';
-                        launchUrl(
-                          Uri.parse(whatsappUrl),
-                          mode: LaunchMode.externalApplication,
-                        );
-                      },
-                    ),
+
                     const SizedBox(height: 16),
                     ContactOption(
                       icon: 'assets/images/wechat_img.png',
@@ -282,29 +269,6 @@ class _DetailsPageState extends State<DetailsPage> {
                               ),
                               margin: const EdgeInsets.all(16),
                             ),
-                          );
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    ContactOption(
-                      icon: 'assets/images/telegram_img.png',
-                      title: 'TELEGRAM',
-                      subtitle: '12331698642',
-                      onTap: () async {
-                        final contact = '12331698642';
-                        final telegramAppUrl = 'tg://resolve?phone=$contact';
-                        final telegramWebUrl = 'https://t.me/+$contact';
-
-                        if (await canLaunchUrl(Uri.parse(telegramAppUrl))) {
-                          launchUrl(
-                            Uri.parse(telegramAppUrl),
-                            mode: LaunchMode.externalApplication,
-                          );
-                        } else {
-                          launchUrl(
-                            Uri.parse(telegramWebUrl),
-                            mode: LaunchMode.externalApplication,
                           );
                         }
                       },

@@ -47,28 +47,12 @@ class CooperationPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppLocalizations.of(context).translate('projectName'),
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
                     AppLocalizations.of(context).translate('factoryDormitory'),
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Image.asset(
-                    'assets/images/cooperation_bg.png',
-                    width: double.infinity,
-                    height: 180,
-                    fit: BoxFit.cover,
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -176,44 +160,7 @@ class CooperationPage extends StatelessWidget {
                       }
                     },
                   ),
-                  ContactInfoRow(
-                    img: 'assets/images/whatapp_img.png',
-                    label: AppLocalizations.of(context).translate('whatsapp'),
-                    value: '12331698642',
-                    onTap: () async {
-                      final phoneNumber = '12331698642';
-                      final whatsappUrl = 'https://wa.me/$phoneNumber';
-                      try {
-                        if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
-                          await launchUrl(
-                            Uri.parse(whatsappUrl),
-                            mode: LaunchMode.externalApplication,
-                          );
-                        } else {
-                          Clipboard.setData(ClipboardData(text: phoneNumber));
-                          if (!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                AppLocalizations.of(
-                                  context,
-                                ).translate('copyClipboard'),
-                              ),
-                              backgroundColor: const Color(0xFF26CB93),
-                            ),
-                          );
-                        }
-                      } catch (e) {
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Error: ${e.toString()}'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
-                    },
-                  ),
+
                   ContactInfoRow(
                     img: 'assets/images/wechat_img.png',
                     label: AppLocalizations.of(context).translate('wechat'),
@@ -301,69 +248,6 @@ class CooperationPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             margin: const EdgeInsets.all(16),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                  ContactInfoRow(
-                    img: 'assets/images/telegram_img.png',
-                    label: AppLocalizations.of(context).translate('telegram'),
-                    value: '12331698642',
-                    onTap: () async {
-                      final phone = '12331698642';
-
-                      final telegramAppUrl = 'tg://resolve?phone=$phone';
-                      final telegramWebUrl = 'https://t.me/+$phone';
-
-                      try {
-                        if (await canLaunchUrl(Uri.parse(telegramAppUrl))) {
-                          await launchUrl(
-                            Uri.parse(telegramAppUrl),
-                            mode: LaunchMode.externalApplication,
-                          );
-                        } else if (await canLaunchUrl(
-                          Uri.parse(telegramWebUrl),
-                        )) {
-                          await launchUrl(
-                            Uri.parse(telegramWebUrl),
-                            mode: LaunchMode.externalApplication,
-                          );
-                        } else {
-                          await Clipboard.setData(ClipboardData(text: phone));
-                          if (!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.check_circle,
-                                    color: Colors.white,
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    ).translate('copyClipboard'),
-                                  ),
-                                ],
-                              ),
-                              backgroundColor: const Color(0xFF26CB93),
-                              duration: const Duration(seconds: 2),
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              margin: const EdgeInsets.all(16),
-                            ),
-                          );
-                        }
-                      } catch (e) {
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Error: ${e.toString()}'),
-                            backgroundColor: Colors.red,
                           ),
                         );
                       }
