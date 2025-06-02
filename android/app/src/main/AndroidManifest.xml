@@ -44,7 +44,7 @@
         <package android:name="jp.naver.line.android" />
     </queries>
     <application
-        android:label="property_manage"
+        android:label="NCA Property"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

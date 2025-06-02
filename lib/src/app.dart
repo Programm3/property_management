@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
             );
           }
           return MaterialApp.router(
-            title: 'Property Management',
+            title: 'NCA Property',
             locale: languageProvider.currentLocale,
             supportedLocales: const [
               Locale('zh', 'CN'),
