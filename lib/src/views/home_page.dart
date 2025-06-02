@@ -1003,7 +1003,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator(color: Color(0xFF26CB93)));
     }
 
     if (_error != null) {
@@ -1142,7 +1142,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    if (_filteredProperties.isEmpty) {
+    if (_filteredProperties.isEmpty && !_isLoading) {
       return Center(
         child: Text(
           AppLocalizations.of(context).translate('noPropertiesFound'),
