@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:property_manage/src/localization/app_localizations.dart';
 import 'package:property_manage/src/models/rent_type.dart';
@@ -94,20 +95,14 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         return;
       }
 
-      final success = await authProvider.login('soegyi', 'ss123123');
+      final username = dotenv.env['USERNAME'] ?? 'soegyi';
+      final password = dotenv.env['PASSWORD'] ?? 'ss123123';
+
+      final success = await authProvider.login(username, password);
 
       if (success) {
         if (!mounted) return;
-
-        // _loadRentTypes();
         context.read<RentalTypesProvider>().loadRentTypes();
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(
-        //     content: Text(
-        //       AppLocalizations.of(context).translate('loginSuccess'),
-        //     ),
-        //   ),
-        // );
       } else {
         if (!mounted) return;
 
@@ -118,9 +113,9 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error during login: $e')));
+      // ScaffoldMessenger.of(
+      //   context,
+      // ).showSnackBar(SnackBar(content: Text('Error during login: $e')));
     } finally {
       if (mounted) {
         setState(() {
@@ -144,6 +139,15 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       listen: false,
     );
     final currentLanguageCode = languageProvider.currentLocale.languageCode;
+
+    if (_isLoggingIn) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(color: Color(0xFF26CB93)),
+        ),
+      );
+    }
+
     return Consumer<RentalTypesProvider>(
       builder: (context, rentalTypesProvider, child) {
         if (rentalTypesProvider.isLoading) {
@@ -303,35 +307,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                       },
                     ),
                   ),
-
-                  // OptionCard(
-                  //   title: AppLocalizations.of(
-                  //     context,
-                  //   ).translate('propertyBuy'),
-                  //   imagePath: 'assets/images/property_buy_img.png',
-                  //   onTap: () => handlePropertyAction('buy'),
-                  // ),
-                  // OptionCard(
-                  //   title: AppLocalizations.of(
-                  //     context,
-                  //   ).translate('propertyRent'),
-                  //   imagePath: 'assets/images/property_rent_img.png',
-                  //   onTap: () => handlePropertyAction('rent'),
-                  // ),
-                  // OptionCard(
-                  //   title: AppLocalizations.of(
-                  //     context,
-                  //   ).translate('propertySell'),
-                  //   imagePath: 'assets/images/property_sell_img.png',
-                  //   onTap: () => handlePropertyAction('sell'),
-                  // ),
-                  // OptionCard(
-                  //   title: AppLocalizations.of(
-                  //     context,
-                  //   ).translate('propertyRentOut'),
-                  //   imagePath: 'assets/images/property_rent_out_img.png',
-                  //   onTap: () => handlePropertyAction('rent-out'),
-                  // ),
                 ],
               ),
             ),
