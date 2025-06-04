@@ -48,6 +48,12 @@ final router = GoRouter(
     return null;
   },
   routes: <RouteBase>[
+    if (kIsWeb)
+      GoRoute(
+        path: '/contact',
+        name: 'contact',
+        builder: (context, state) => MainLayout(child: const ContactPage()),
+      ),
     GoRoute(
       path: '/onboarding',
       name: 'onboarding',
@@ -112,11 +118,12 @@ final router = GoRouter(
             return HomePage(provinceId: provinceId, rentTypeId: rentTypeId);
           },
         ),
-        GoRoute(
-          path: '/contact',
-          name: 'contact',
-          builder: (context, state) => const ContactPage(),
-        ),
+        if (!kIsWeb)
+          GoRoute(
+            path: '/contact',
+            name: 'contact',
+            builder: (context, state) => const ContactPage(),
+          ),
         GoRoute(
           path: '/cooperation',
           name: 'cooperation',
