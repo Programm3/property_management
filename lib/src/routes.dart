@@ -13,6 +13,7 @@ import 'package:property_manage/src/layouts/main_layout.dart';
 import 'package:property_manage/src/views/config_page.dart';
 import 'package:property_manage/src/views/privacy_policy_page.dart';
 import 'package:property_manage/src/views/switch_language_page.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
@@ -33,6 +34,10 @@ final router = GoRouter(
 
     final publicRoutes = ['/onboarding', '/onboarding2', '/privacy-policy'];
 
+    if (kIsWeb) {
+      publicRoutes.add('/contact');
+    }
+
     if (publicRoutes.any((route) => state.matchedLocation.startsWith(route))) {
       return null;
     }
@@ -40,7 +45,6 @@ final router = GoRouter(
     if (!hasAcceptedPrivacyPolicy || !isAuthenticated) {
       return '/onboarding';
     }
-
     return null;
   },
   routes: <RouteBase>[
