@@ -20,23 +20,23 @@ class ContactPage extends StatelessWidget {
     final currentLanguageCode = languageProvider.currentLocale.languageCode;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Text(
-            AppLocalizations.of(context).translate('contactUs'),
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   elevation: 0,
+      //   title: GestureDetector(
+      //     onTap: () => FocusScope.of(context).unfocus(),
+      //     child: Text(
+      //       AppLocalizations.of(context).translate('contactUs'),
+      //       style: TextStyle(
+      //         color: Colors.black,
+      //         fontSize: 18,
+      //         fontWeight: FontWeight.bold,
+      //       ),
+      //     ),
+      //   ),
+      //   centerTitle: true,
+      //   iconTheme: const IconThemeData(color: Colors.black),
+      // ),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
