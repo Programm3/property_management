@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:property_manage/src/localization/app_localizations.dart';
 import 'package:property_manage/src/models/rent_type.dart';
@@ -45,7 +46,9 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        _checkPrivacyPolicy();
+        if (!kIsWeb) {
+          _checkPrivacyPolicy();
+        }
         _login();
         // context.read<RentalTypesProvider>().loadRentTypes();
       }
