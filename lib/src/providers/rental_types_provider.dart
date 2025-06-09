@@ -15,7 +15,7 @@ class RentalTypesProvider with ChangeNotifier {
   String? get error => _error;
 
   Future<void> loadRentTypes() async {
-    if (_rentTypes.isNotEmpty) return;
+    if (_rentTypes.isNotEmpty && _error == null) return;
 
     _isLoading = true;
     _error = null;
@@ -23,6 +23,8 @@ class RentalTypesProvider with ChangeNotifier {
 
     try {
       final response = await _apiService.get('rent-type');
+
+      _rentTypes = [];
 
       if (response is List) {
         _rentTypes = response.map((item) => RentType.fromJson(item)).toList();
@@ -44,6 +46,10 @@ class RentalTypesProvider with ChangeNotifier {
             }
           }
         }
+      }
+
+      if (_rentTypes.isEmpty) {
+        _error = "No rental types found in the response";
       }
 
       _isLoading = false;
