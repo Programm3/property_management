@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:property_manage/src/providers/connectivity_provider.dart';
 import 'package:property_manage/src/providers/message_provider.dart';
 import 'package:property_manage/src/providers/property_provider.dart';
@@ -11,6 +12,7 @@ import 'package:property_manage/src/providers/language_provider.dart';
 import 'package:property_manage/src/providers/auth_provider.dart';
 import 'package:property_manage/src/providers/province_provider.dart';
 import 'package:property_manage/src/localization/app_localizations.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -21,14 +23,42 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _isInitializing = true;
+  late final GoRouter _customRouter;
 
   @override
   void initState() {
     super.initState();
 
+    _customRouter = router;
+
+    if (kIsWeb) {
+      _initWebRouter();
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndLogin();
     });
+  }
+
+  void _initWebRouter() {
+    try {
+      // Use Uri.base instead of the web package
+      final uri = Uri.base;
+      final fragment = uri.fragment;
+      print('Current fragment: $fragment');
+
+      if (fragment.isNotEmpty) {
+        _customRouter = GoRouter(
+          navigatorKey: rootNavigatorKey,
+          initialLocation: '/$fragment',
+          debugLogDiagnostics: true,
+          routes: router.configuration.routes,
+        );
+        print('Setting initial location to: /$fragment');
+      }
+    } catch (e) {
+      print('Error accessing URL: $e');
+    }
   }
 
   Future<void> _checkAndLogin() async {
@@ -87,7 +117,7 @@ class _MyAppState extends State<MyApp> {
             );
           }
           return MaterialApp.router(
-            routerConfig: router,
+            routerConfig: _customRouter,
             title: 'NCA Property',
             locale: languageProvider.currentLocale,
             supportedLocales: const [

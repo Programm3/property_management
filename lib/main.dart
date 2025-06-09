@@ -7,8 +7,9 @@ import 'package:property_manage/src/providers/connectivity_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load(fileName: ".env");
 
   runApp(
     MultiProvider(
