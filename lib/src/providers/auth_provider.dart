@@ -58,13 +58,13 @@ class AuthProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
+    final username = dotenv.env['USERNAME'] ?? 'soegyi';
+    final password = dotenv.env['PASSWORD'] ?? 'ss123123';
+
     try {
       var headers = {'Content-Type': 'application/json'};
       var request = http.Request('POST', Uri.parse('$_apiBaseUrl/token/'));
-      request.body = json.encode({
-        "username": dotenv.env['USERNAME'],
-        "password": dotenv.env['PASSWORD'],
-      });
+      request.body = json.encode({"username": username, "password": password});
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
