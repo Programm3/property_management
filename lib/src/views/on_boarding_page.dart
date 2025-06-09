@@ -48,9 +48,10 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       if (mounted) {
         if (!kIsWeb) {
           _checkPrivacyPolicy();
+        } else {
+          PrivacyPolicyService.setPrivacyPolicyAccepted();
         }
         _login();
-        // context.read<RentalTypesProvider>().loadRentTypes();
       }
     });
   }
