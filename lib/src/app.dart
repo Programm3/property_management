@@ -87,6 +87,7 @@ class _MyAppState extends State<MyApp> {
             );
           }
           return MaterialApp.router(
+            routerConfig: router,
             title: 'NCA Property',
             locale: languageProvider.currentLocale,
             supportedLocales: const [
@@ -101,7 +102,6 @@ class _MyAppState extends State<MyApp> {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            routerConfig: router,
             builder: (context, child) {
               return Stack(
                 children: [
