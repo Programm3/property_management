@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:property_manage/src/providers/connectivity_provider.dart';
@@ -28,6 +29,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
     _customRouter = router;
 
@@ -73,6 +75,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
     return MultiProvider(
       providers: [
         ProxyProvider<AuthProvider, ApiService>(
@@ -126,6 +134,12 @@ class _MyAppState extends State<MyApp> {
               Locale('th', 'TH'),
               Locale('my', 'MM'),
             ],
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              useMaterial3: true,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+              platform: TargetPlatform.iOS,
+            ),
             localizationsDelegates: const [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
@@ -133,9 +147,19 @@ class _MyAppState extends State<MyApp> {
               GlobalCupertinoLocalizations.delegate,
             ],
             builder: (context, child) {
+              final mediaQuery = MediaQuery.of(context);
+              final size = mediaQuery.size;
+              final isTablet = size.shortestSide >= 600;
+
+              final responsiveChild = MediaQuery(
+                data: mediaQuery.copyWith(
+                  textScaler: TextScaler.linear(isTablet ? 1.1 : 1.0),
+                ),
+                child: child!,
+              );
               return Stack(
                 children: [
-                  child!,
+                  responsiveChild,
                   if (!connectivityProvider.isConnected)
                     Positioned(
                       top: 0,
@@ -143,7 +167,10 @@ class _MyAppState extends State<MyApp> {
                       right: 0,
                       child: Container(
                         color: Colors.red,
-                        padding: const EdgeInsets.only(top: 60, bottom: 20),
+                        padding: EdgeInsets.only(
+                          top: mediaQuery.padding.top + (isTablet ? 16 : 8),
+                          bottom: isTablet ? 24 : 20,
+                        ),
                         width: double.infinity,
                         child: const Text(
                           'No Internet',

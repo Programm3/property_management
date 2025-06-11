@@ -119,6 +119,10 @@ class _DetailsPageState extends State<DetailsPage> {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
+            useRootNavigator: true,
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width,
+            ),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
