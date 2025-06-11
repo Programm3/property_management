@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:property_manage/src/localization/app_localizations.dart';
@@ -982,6 +983,7 @@ class _HomePageState extends State<HomePage> {
               _properties.where((property) => property['status'] == 1).toList();
           _nextPageUrl = response['next'];
           _isLoading = false;
+          _isInitialLoad = false;
         });
       }
     } catch (e) {
@@ -989,6 +991,7 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           _error = e.toString();
           _isLoading = false;
+          _isInitialLoad = false;
         });
       }
     }
@@ -996,10 +999,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return Center(child: CircularProgressIndicator(color: Color(0xFF26CB93)));
-    }
-
     if (_error != null) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final sessionService = SessionService();
@@ -1020,6 +1019,11 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
+          // systemOverlayStyle: SystemUiOverlayStyle(
+          //   statusBarIconBrightness: Brightness.dark,
+          //   statusBarBrightness: Brightness.light,
+          //   statusBarColor: Colors.transparent,
+          // ),
           automaticallyImplyLeading: false,
           leading: null,
           actions: null,
@@ -1100,6 +1104,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  bool _isInitialLoad = true;
+
   Widget buildBody() {
     if (_isSearchFocused) {
       return GestureDetector(
@@ -1114,7 +1120,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    if (_isLoading) {
+    if (_isLoading || _isInitialLoad) {
       return const Center(
         child: CircularProgressIndicator(color: Color(0xFF26CB93)),
       );
@@ -1136,7 +1142,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    if (_filteredProperties.isEmpty && !_isLoading) {
+    if (_filteredProperties.isEmpty) {
       return Center(
         child: Text(
           AppLocalizations.of(context).translate('noPropertiesFound'),
