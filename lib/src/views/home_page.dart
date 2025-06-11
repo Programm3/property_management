@@ -127,7 +127,10 @@ class _HomePageState extends State<HomePage> {
                       return Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 16,
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -683,103 +686,94 @@ class _HomePageState extends State<HomePage> {
                                     );
                                   },
                                 ),
-
-                                const SizedBox(height: 250),
-                                // Action buttons
-                                Column(
-                                  children: [
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: OutlinedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          _loadProperties(
-                                            provinceId: _selectedProvince,
-                                            rentTypeId: _selectRentType,
-                                            propertyTypeId:
-                                                _selectedPropertyType,
-                                          );
-                                        },
-                                        style: OutlinedButton.styleFrom(
-                                          side: const BorderSide(
-                                            color: Color(0xff26cb93),
-                                          ),
-                                          backgroundColor: const Color(
-                                            0xfff7fefa,
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 14,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          ).translate('viewResults'),
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            color: Color(0xff000000),
-                                          ),
-                                        ),
+                              ],
+                            ),
+                          ),
+                          Expanded(child: Container()),
+                          // Action Buttons
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      _loadProperties(
+                                        provinceId: _selectedProvince,
+                                        rentTypeId: _selectRentType,
+                                        propertyTypeId: _selectedPropertyType,
+                                      );
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(
+                                        color: Color(0xff26cb93),
+                                      ),
+                                      backgroundColor: const Color(0xfff7fefa),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 14,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                     ),
-                                    const SizedBox(height: 16),
-
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: OutlinedButton(
-                                        onPressed: () {
-                                          // Navigator.of(context).pop();
-                                          setModalState(() {
-                                            _selectedProvince = null;
-                                            _selectedPropertyType = null;
-                                            _selectRentType = null;
-                                          });
-                                          SharedPreferences.getInstance().then((
-                                            prefs,
-                                          ) {
-                                            prefs.remove('selected_province');
-                                            prefs.remove(
-                                              'selected_property_type',
-                                            );
-                                            prefs.remove('selected_rent_type');
-                                          });
-                                          _loadProperties();
-                                        },
-                                        style: OutlinedButton.styleFrom(
-                                          side: const BorderSide(
-                                            color: Color(0xff26cb93),
-                                          ),
-                                          backgroundColor: const Color(
-                                            0xfff7fefa,
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 14,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          ).translate('reset'),
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            color: Color(0xff000000),
-                                          ),
-                                        ),
+                                    child: Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      ).translate('viewResults'),
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff000000),
                                       ),
                                     ),
-                                  ],
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      // Navigator.of(context).pop();
+                                      setModalState(() {
+                                        _selectedProvince = null;
+                                        _selectedPropertyType = null;
+                                        _selectRentType = null;
+                                      });
+                                      SharedPreferences.getInstance().then((
+                                        prefs,
+                                      ) {
+                                        prefs.remove('selected_province');
+                                        prefs.remove('selected_property_type');
+                                        prefs.remove('selected_rent_type');
+                                      });
+                                      _loadProperties();
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(
+                                        color: Color(0xff26cb93),
+                                      ),
+                                      backgroundColor: const Color(0xfff7fefa),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 14,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      ).translate('reset'),
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff000000),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
