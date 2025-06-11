@@ -58,7 +58,12 @@ class _HomeSearchPageState extends State<HomeSearchPage> {
   }
 
   Future<void> _searchProperties(String searchTerm) async {
-    if (searchTerm.isEmpty) return;
+    if (searchTerm.isEmpty) {
+      setState(() {
+        _searchResults = widget.properties ?? [];
+      });
+      return;
+    }
 
     setState(() {
       _isLoading = true;
