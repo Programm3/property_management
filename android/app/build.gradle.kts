@@ -13,6 +13,11 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+configurations.all {
+    exclude(group = "com.google.android.play", module = "core")
+    exclude(group = "com.google.android.play", module = "core-ktx")
+}
+
 android {
     namespace = "com.nca.bkk"
     compileSdk = flutter.compileSdkVersion

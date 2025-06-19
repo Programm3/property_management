@@ -6,15 +6,15 @@
 -keep class io.flutter.**  { *; }
 -keep class io.flutter.plugins.**  { *; }
 
-# Add these rules for Play Core
+# Completely ignore Play Core
 -dontwarn com.google.android.play.core.**
 -keep class com.google.android.play.core.** { *; }
 
-# Add these rules for Flutter deferred components
+# For deferred components
 -dontwarn io.flutter.embedding.engine.deferredcomponents.**
 -keep class io.flutter.embedding.engine.deferredcomponents.** { *; }
 
-# Specific classes mentioned in the error
+# Specific classes from the error message
 -dontwarn com.google.android.play.core.tasks.OnFailureListener
 -dontwarn com.google.android.play.core.tasks.OnSuccessListener
 -dontwarn com.google.android.play.core.tasks.Task
