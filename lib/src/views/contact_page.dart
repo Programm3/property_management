@@ -6,6 +6,7 @@ import 'package:property_manage/src/widgets/message_form_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ContactPage extends StatelessWidget {
   const ContactPage({super.key});
@@ -192,6 +193,92 @@ class ContactPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
+                  if (kIsWeb)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Download Our App',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              // Google Play Store Button
+                              GestureDetector(
+                                onTap: () async {
+                                  // final playStoreUrl = '';
+                                  // if (await canLaunchUrl(
+                                  //   Uri.parse(playStoreUrl),
+                                  // )) {
+                                  //   await launchUrl(
+                                  //     Uri.parse(playStoreUrl),
+                                  //     mode: LaunchMode.externalApplication,
+                                  //   );
+                                  // } else {
+                                  //   if (!context.mounted) return;
+                                  //   ScaffoldMessenger.of(context).showSnackBar(
+                                  //     SnackBar(
+                                  //       content: Text(
+                                  //         AppLocalizations.of(
+                                  //           context,
+                                  //         ).translate('errorOpeningLink'),
+                                  //       ),
+                                  //       backgroundColor: Colors.red,
+                                  //     ),
+                                  //   );
+                                  // }
+                                },
+                                child: Image.asset(
+                                  'assets/images/img_google_play.png',
+                                  height: 40,
+                                ),
+                              ),
+
+                              const SizedBox(width: 16),
+                              // Apple App Store Button
+                              GestureDetector(
+                                onTap: () async {
+                                  final appStoreUrl =
+                                      'https://apps.apple.com/us/app/nca-property/id6746011092';
+                                  if (await canLaunchUrl(
+                                    Uri.parse(appStoreUrl),
+                                  )) {
+                                    await launchUrl(
+                                      Uri.parse(appStoreUrl),
+                                      mode: LaunchMode.externalApplication,
+                                    );
+                                  } else {
+                                    if (!context.mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          ).translate('errorOpeningLink'),
+                                        ),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Image.asset(
+                                  'assets/images/img_appstore.png',
+                                  height: 40,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  // Download Image button
                   Text(
                     AppLocalizations.of(context).translate('contactUs'),
                     style: TextStyle(
