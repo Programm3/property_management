@@ -58,8 +58,8 @@ class AuthProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    final username = dotenv.env['USERNAME'] ?? 'soegyi';
-    final password = dotenv.env['PASSWORD'] ?? 'ss123123';
+    // final username = dotenv.env['USERNAME'] ?? 'soegyi';
+    // final password = dotenv.env['PASSWORD'] ?? 'ss123123';
 
     try {
       var headers = {'Content-Type': 'application/json'};
@@ -68,9 +68,9 @@ class AuthProvider extends ChangeNotifier {
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
+      final responseBody = await response.stream.bytesToString();
 
       if (response.statusCode == 200) {
-        final responseBody = await response.stream.bytesToString();
         final data = jsonDecode(responseBody);
 
         _token = data['access'] ?? data['refresh'];
@@ -93,6 +93,24 @@ class AuthProvider extends ChangeNotifier {
       _error = 'Network error: $e';
       _isLoading = false;
       notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> isTokenValid() async {
+    if (_token == null) return false;
+
+    try {
+      var headers = {'Authorization': 'Bearer $_token'};
+      var request = http.Request(
+        'GET',
+        Uri.parse('$_apiBaseUrl/validate-token/'),
+      );
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      return response.statusCode == 200;
+    } catch (e) {
       return false;
     }
   }
