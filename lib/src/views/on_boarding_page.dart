@@ -116,10 +116,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       }
     } catch (e) {
       if (!mounted) return;
-
-      // ScaffoldMessenger.of(
-      //   context,
-      // ).showSnackBar(SnackBar(content: Text('Error during login: $e')));
     } finally {
       if (mounted) {
         setState(() {
