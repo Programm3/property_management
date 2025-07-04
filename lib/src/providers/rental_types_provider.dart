@@ -16,7 +16,6 @@ class RentalTypesProvider with ChangeNotifier {
 
   Future<void> loadRentTypes() async {
     if (_rentTypes.isNotEmpty && _error == null) return;
-
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -58,7 +57,6 @@ class RentalTypesProvider with ChangeNotifier {
       _error = e.toString();
       _isLoading = false;
       notifyListeners();
-      // print('Failed to load rent types: $_error');
     }
   }
 
