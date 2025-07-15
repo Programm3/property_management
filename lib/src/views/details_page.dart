@@ -284,7 +284,7 @@ class _DetailsPageState extends State<DetailsPage> {
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF26CB93), // TODO: color wrong 60c696
+          backgroundColor: const Color(0xFF26CB93),
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
           padding: const EdgeInsets.symmetric(vertical: 20),
         ),
@@ -346,7 +346,6 @@ class _DetailsPageState extends State<DetailsPage> {
     };
 
     final currentLanguageCode = languageProvider.currentLocale.languageCode;
-    // print(_property!['property_type_detail']?[nameValue[currentLanguageCode]]);
 
     final images = _property!['images'] as List<dynamic>? ?? [];
     final title = utf8.decode(

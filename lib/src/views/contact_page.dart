@@ -21,23 +21,6 @@ class ContactPage extends StatelessWidget {
     final currentLanguageCode = languageProvider.currentLocale.languageCode;
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      //   title: GestureDetector(
-      //     onTap: () => FocusScope.of(context).unfocus(),
-      //     child: Text(
-      //       AppLocalizations.of(context).translate('contactUs'),
-      //       style: TextStyle(
-      //         color: Colors.black,
-      //         fontSize: 18,
-      //         fontWeight: FontWeight.bold,
-      //       ),
-      //     ),
-      //   ),
-      //   centerTitle: true,
-      //   iconTheme: const IconThemeData(color: Colors.black),
-      // ),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -210,7 +193,7 @@ class ContactPage extends StatelessWidget {
                           const SizedBox(height: 12),
                           Row(
                             children: [
-                              // Google Play Store Button
+                              // PlayStore Button
                               GestureDetector(
                                 onTap: () async {
                                   // final playStoreUrl = '';
@@ -242,7 +225,7 @@ class ContactPage extends StatelessWidget {
                               ),
 
                               const SizedBox(width: 16),
-                              // Apple App Store Button
+                              // App Store Button
                               GestureDetector(
                                 onTap: () async {
                                   final appStoreUrl =

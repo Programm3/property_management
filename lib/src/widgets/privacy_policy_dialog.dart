@@ -17,7 +17,6 @@ class PrivacyPolicyDialog extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: SizedBox(
-        // height: 189,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

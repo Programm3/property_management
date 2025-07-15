@@ -44,10 +44,9 @@ class _MyAppState extends State<MyApp> {
 
   void _initWebRouter() {
     try {
-      // Use Uri.base instead of the web package
       final uri = Uri.base;
       final fragment = uri.fragment;
-      print('Current fragment: $fragment');
+      // print('Current fragment: $fragment');
 
       if (fragment.isNotEmpty) {
         _customRouter = GoRouter(
@@ -56,10 +55,10 @@ class _MyAppState extends State<MyApp> {
           debugLogDiagnostics: true,
           routes: router.configuration.routes,
         );
-        print('Setting initial location to: /$fragment');
+        // print('Setting initial location to: /$fragment');
       }
     } catch (e) {
-      print('Error accessing URL: $e');
+      // print('Error accessing URL: $e');
     }
   }
 
